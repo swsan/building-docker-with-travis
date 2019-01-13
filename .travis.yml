@@ -9,6 +9,7 @@ install:
   - docker build -t hello_ci .
   - docker run -d -p 127.0.0.1:8000:8000 --name hello_ci hello_ci
 
+
 #before_script:
 #  - pip install -r requirements.txt
 
