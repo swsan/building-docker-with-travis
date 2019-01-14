@@ -16,3 +16,9 @@ install:
 script:
   - docker ps | grep -q hello_ci
 #  - python tests.py
+
+deploy:
+  provider: script
+  script: bash docker_push.sh
+  on:
+    branch: master
