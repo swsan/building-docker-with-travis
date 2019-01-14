@@ -1,20 +1,21 @@
-dist: trusty
-
 services:
   - docker
 
-jobs:
-  include:
-    - stage: build docker image
-      script:
-      - echo "$DOCKER_PASSWORD" 
-      - echo "$DOCKER_USERNAME"
-      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t hello_ci .
-      - docker images
-      - docker tag hello_ci $DOCKER_USERNAME/hello_ci
-      - docker push $DOCKER_USERNAME/hello_ci
-    - stage: test
-      script: 
-      - docker run -d -p 127.0.0.1:8000:8000 --name hello_ci sansw/hello_ci
-      - docker ps | grep -q hello_ci
+branches:
+  only:
+    - master
+    - fix1
+
+install:
+  - docker build -t hello_ci .
+  - docker tag hello_ci $DOCKER_USERNAME/hello_ci
+  - docker images
+  - echo "$DOCKER_PASSWORD"
+  - echo "$DOCKER_USERNAME"
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker tag hello_ci $DOCKER_USERNAME/hello_ci
+  - docker push $DOCKER_USERNAME/hello_ci
+
+script:
+  - docker run -d -p 127.0.0.1:8000:8000 --name hello_ci $DOCKER_USERNAME/hello_ci
+  - docker ps | grep -q hello_ci
