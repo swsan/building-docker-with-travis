@@ -7,7 +7,7 @@ branches:
     - fix1
 
 install:
-  - docker build -t hello_ci .
+  - docker build -t hello_ci helloworld/.
   - docker tag hello_ci $DOCKER_USERNAME/hello_ci
   - docker images
   - echo "$DOCKER_PASSWORD"
