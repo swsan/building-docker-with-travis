@@ -6,8 +6,8 @@ services:
   - docker
 
 install:
-  - docker build -t hello_ci .
-  - docker run -d -p 127.0.0.1:8000:8000 --name hello_ci hello_ci
+  - docker build -t sansw/hello_ci .
+  - docker run -d -p 127.0.0.1:8000:8000 --name hello_ci sansw/hello_ci
 
 
 #before_script:
