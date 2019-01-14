@@ -1,24 +1,18 @@
-language: python
-python:
-  - 3.4
-
 services:
   - docker
 
-install:
-  - docker build -t sansw/hello_ci .
-  - docker run -d -p 127.0.0.1:8000:8000 --name hello_ci sansw/hello_ci
-
-
-#before_script:
-#  - pip install -r requirements.txt
-
-script:
-  - docker ps | grep -q hello_ci
-#  - python tests.py
-
-deploy:
-  provider: script
-  script: bash docker_push.sh
-  on:
-    branch: master
+jobs:
+  include:
+    - stage: build docker image
+      script:
+      - echo "$DOCKER_PASSWORD" 
+      - echo "$DOCKER_USERNAME"
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t hello_ci .
+      - docker images
+      - docker tag hello_ci $DOCKER_USERNAME/hello_ci
+      - docker push $DOCKER_USERNAME/hello_ci
+    - stage: test
+      script: 
+      - docker run -d -p 127.0.0.1:8000:8000 --name hello_ci sansw/hello_ci
+      - docker ps | grep -q hello_ci
